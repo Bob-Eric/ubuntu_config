@@ -1,22 +1,23 @@
-wget http://fishros.com/install -O fishros && . fishros
 sudo rm /etc/apt/sources.list.d/ros-fish.list
 gpg --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 gpg --export C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 | sudo tee /usr/share/keyrings/ros.gpg > /dev/null
 sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/ros.gpg] https://mirrors.ustc.edu.cn/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-wget https://github.com/v2fly/v2ray-core/releases/download/v4.31.0/v2ray-linux-64.zip
-wget https://github.com/Qv2ray/Qv2ray/releases/download/v2.7.0/Qv2ray-v2.7.0-linux-x64.AppImage
+echo "成功删除清华ROS源并添加中科大ROS源"
 sudo apt install vim git python3 g++ snap -y
-sudo snap install code --classic
-
+echo "安装Vscode中..."
+wget https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+sudo apt install ./code*.deb
+echo "设置任务栏中位置为底部、图标只在当前工作区显示"
+gsettings set org.gnome.shell.extensions.dash-to-dock dock-position "BOTTOM"
 gsettings set org.gnome.shell.extensions.dash-to-dock isolate-workspaces true
-
+echo "安装solaar罗技驱动及copyq剪切板控制软件"
 sudo add-apt-repository ppa:solaar-unifying/stable
 sudo apt update
 sudo apt install copyq solaar -y
-sudo apt install zsh curl gedit -y
-sh -c "$(curl -fsSL https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)" -y
-git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+echo "安装zsh插件"
+bash ./install_onmyzsh.sh
+git clone https://gitee.com/yaozhijin/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+git clone https://gitee.com/yaozhijin/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 chsh -s /bin/zsh 
-gedit ~/.zshrc
-gedit ~/.bashrc
+cp ./.bashrc ~/.bashrc
+cp ./.zshrc ~/.zshrc
