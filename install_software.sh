@@ -1,0 +1,1 @@
+/home/chy/Desktop/install_software.sh

@@ -1,0 +1,3 @@
+[submodule "ibus-libpinyin"]
+	path = ibus-libpinyin
+	url = https://github.com/libpinyin/ibus-libpinyin.git
