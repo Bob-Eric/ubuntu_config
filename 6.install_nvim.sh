@@ -28,12 +28,6 @@ tar -xvjf btop.tbz
 cd btop && sudo make install
 cd -
 
-echo "安装NodeJs"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-. ~/.zshrc
-nvm install --lts
-nvm use --lts
-
 echo "设置sudo下使用nvim"
 echo "export SUDO_EDITOR=nvim" >>~/.zshrc
 echo "export SUDO_EDITOR=nvim" >>~/.bashrc
