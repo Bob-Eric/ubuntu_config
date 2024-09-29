@@ -1,17 +1,14 @@
 echo "安装nvim中"
-sudo add-apt-repository ppa:neovim-ppa/unstable
-sudo apt update
-sudo apt install neovim
-git clone https://github.com/Bob-Eric/ubuntu_config.git ~/.config/nvim
-
 # 判断CPU架构
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
     LAZYGIT_ARCH="x86_64"
     BTOP_ARCH="x86_64"
+    sudo apt install ./nvim-linux64.deb
 elif [[ "$ARCH" == "aarch64" ]]; then
     LAZYGIT_ARCH="arm64"
     BTOP_ARCH="aarch64"
+    sudo apt install ./nvim-linux_arm64.deb
 
 echo "安装Lazygit"
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
