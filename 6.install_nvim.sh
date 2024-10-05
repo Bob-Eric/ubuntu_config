@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt update && sudo apt install jq -y
+
 # 设置你的GitLab项目名称
 PROJECT_NAME="neovim"
 NAMESPACE="neovim"
