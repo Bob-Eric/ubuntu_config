@@ -1,33 +1,62 @@
+#!/bin/bash
+
+# 设置你的GitLab项目名称
+PROJECT_NAME="neovim"
+NAMESPACE="neovim"
+
+# 获取项目ID
+PROJECT_INFO=$(curl -s "https://gitlab.b-data.ch/api/v4/projects?search=$PROJECT_NAME")
+PROJECT_ID=$(echo $PROJECT_INFO | jq -r --arg NAMESPACE "$NAMESPACE" --arg PROJECT_NAME "$PROJECT_NAME" '.[] | select(.path_with_namespace == ($NAMESPACE + "/" + $PROJECT_NAME)) | .id')
+# echo "Project ID: $PROJECT_ID"  # 调试信息
+
+# 检查是否成功获取项目ID
+if [ -z "$PROJECT_ID" ]; then
+  echo "Error: Could not find project ID for $NAMESPACE/$PROJECT_NAME"
+  exit 1
+fi
+
+# 获取最新的release信息
+RELEASE_INFO=$(curl -s "https://gitlab.b-data.ch/api/v4/projects/$PROJECT_ID/releases")
+# echo "Release Info: $RELEASE_INFO"  # 调试信息
+
+# 提取最新非nightly release的下载URL
+DOWNLOAD_URLS=$(echo $RELEASE_INFO | jq -r '[.[] | select(.tag_name != "nightly") | .assets.links[] | select(.name | test("nvim-linux-arm64.tar.gz|nvim-linux-amd64.tar.gz")) | .url] | .[]')
+# echo "Download URLs: $DOWNLOAD_URLS"  # 调试信息
+
+# 检查是否成功获取下载URL
+if [ -z "$DOWNLOAD_URLS" ]; then
+  echo "Error: Could not find download URLs for the latest non-nightly release"
+  exit 1
+fi
+
+# 下载最新的release文件，排除.sha256文件
+for url in $(echo "$DOWNLOAD_URLS" | grep -E 'nvim-linux-arm64.tar.gz$|nvim-linux-amd64.tar.gz$' | head -n 2); do
+  filename=$(basename "$url")
+  echo "Downloading $filename from $url"
+  curl -L -o "$filename" "$url"
+done
+
 echo "安装nvim中"
 # 判断CPU架构
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
-    LAZYGIT_ARCH="x86_64"
-    BTOP_ARCH="x86_64"
-    sudo apt install ./nvim-linux64.deb
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-amd64.tar.gz
+    export PATH="$PATH:/opt/nvim-linux-amd64/bin"
+    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' ~/.bashrc; then
+        echo 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' >> ~/.bashrc
+    fi
+    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' ~/.zshrc; then
+        echo 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' >> ~/.zshrc
+    fi
 elif [[ "$ARCH" == "aarch64" ]]; then
-    LAZYGIT_ARCH="arm64"
-    BTOP_ARCH="aarch64"
-    sudo apt install ./nvim-linux_arm64.deb
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-arm64.tar.gz
+    export PATH="$PATH:/opt/nvim-linux-arm64/bin"
+    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' ~/.bashrc; then
+        echo 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' >> ~/.bashrc
+    fi
+    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' ~/.zshrc; then
+        echo 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' >> ~/.zshrc
+    fi
 fi
-echo "安装LazyVim"
-git clone https://github.com/Bob-Eric/lazyvim-config.git ~/.config/nvim
-
-echo "安装Lazygit"
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${LAZYGIT_ARCH}.tar.gz"
-tar xf lazygit.tar.gz lazygit
-sudo install lazygit /usr/local/bin
-
-echo "安装Lazydocker"
-curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-
-echo "安装btop"
-curl -Lo btop.tbz "https://github.com/aristocratos/btop/releases/latest/download/btop-${BTOP_ARCH}-linux-musl.tbz"
-tar -xvjf btop.tbz
-cd btop && sudo make install
-cd -
-
-echo "设置sudo下使用nvim"
-echo "export SUDO_EDITOR=nvim" >>~/.zshrc
-echo "export SUDO_EDITOR=nvim" >>~/.bashrc
