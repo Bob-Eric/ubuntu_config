@@ -15,7 +15,9 @@ sudo bat persist
 
 echo "设置git ssh使用443端口"
 if ! grep -q "Host github.com" ~/.ssh/config; then
-    echo -e "Host github.com\nHostname ssh.github.com\nPort 443\nUser git" >>~/.ssh/config
+  echo -e "Host github.com\nHostname ssh.github.com\nPort 443\nUser git" >>~/.ssh/config
+else
+  echo "环境变量已存在，跳过添加"
 fi
 
 echo "设置git允许非安全协议"
@@ -23,10 +25,14 @@ git config --global http.sslVerify false
 
 echo "curl允许非安全协议"
 if ! grep -q "insecure" ~/.curlrc; then
-    echo -e "insecure" >>~/.curlrc
+  echo -e "insecure" >>~/.curlrc
+else
+  echo "环境变量已存在，跳过添加"
 fi
 
 echo "wget允许非安全协议"
 if ! grep -q "check_certificate = off" ~/.wgetrc; then
-    echo -e "check_certificate = off" >>~/.wgetrc
+  echo -e "check_certificate = off" >>~/.wgetrc
+else
+  echo "环境变量已存在，跳过添加"
 fi

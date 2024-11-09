@@ -42,23 +42,24 @@ echo "安装nvim中"
 # 判断CPU架构
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
-    sudo rm -rf /opt/nvim
-    sudo tar -C /opt -xzf nvim-linux-amd64.tar.gz
-    export PATH="$PATH:/opt/nvim-linux-amd64/bin"
-    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' ~/.bashrc; then
-        echo 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' >> ~/.bashrc
-    fi
-    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' ~/.zshrc; then
-        echo 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' >> ~/.zshrc
-    fi
+  sudo rm -rf /opt/nvim
+  sudo tar -C /opt -xzf nvim-linux-amd64.tar.gz
+  export PATH="$PATH:/opt/nvim-linux-amd64/bin"
+  if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' ~/.bashrc; then
+    echo 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' >>~/.bashrc
+  fi
+  if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' ~/.zshrc; then
+    echo 'export PATH="$PATH:/opt/nvim-linux-amd64/bin"' >>~/.zshrc
+  fi
 elif [[ "$ARCH" == "aarch64" ]]; then
-    sudo rm -rf /opt/nvim
-    sudo tar -C /opt -xzf nvim-linux-arm64.tar.gz
-    export PATH="$PATH:/opt/nvim-linux-arm64/bin"
-    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' ~/.bashrc; then
-        echo 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' >> ~/.bashrc
-    fi
-    if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' ~/.zshrc; then
-        echo 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' >> ~/.zshrc
-    fi
+  sudo rm -rf /opt/nvim
+  sudo tar -C /opt -xzf nvim-linux-arm64.tar.gz
+  export PATH="$PATH:/opt/nvim-linux-arm64/bin"
+  if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' ~/.bashrc; then
+    echo 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' >>~/.bashrc
+  fi
+  if ! grep -q 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' ~/.zshrc; then
+    echo 'export PATH="$PATH:/opt/nvim-linux-arm64/bin"' >>~/.zshrc
+  fi
 fi
+
